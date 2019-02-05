@@ -1,4 +1,4 @@
-program writeToFile(file1,file2) ;
+program writeToFile (file2);
 
 {$mode objfpc}{$H+}
 
@@ -8,7 +8,8 @@ uses
   {$ENDIF}{$ENDIF}
   Sysutils;
 
-  Classes
+  const C_FNAME = '/home/oyvind/repos/oyvind/felted/OPE7.DTA';
+
   TYPE
       LINJETYPE = RECORD
                 LINSTATUS  : INTEGER ;
@@ -18,7 +19,7 @@ uses
   TYPE
       POSTTYPE = RECORD
                       LINTAL : INTEGER;
-                      LINJE : [ARRAY 1 .. 52] OF STRING[80];
+                      LINJE : ARRAY [1 .. 52] OF STRING[80];
                   END;
 
         VAR
@@ -32,7 +33,7 @@ uses
 
         BEGIN
           XPOST.LINTAL := 1;
-          XPOST.LINJE[1] :='':
+          XPOST.LINJE[1] :='';
           IP := 0;
           FOR IT := 1 TO POST.LINTAL DO
             BEGIN
@@ -49,22 +50,30 @@ uses
                       XPOST.LINTAL := XPOST.LINTAL + 1;
                       XPOST.LINJE[XPOST.LINTAL] := COPY(POST.LINJE[IT],PP+1,80);
                       DELETE(XPOST.LINJE[XPOST.LINTAL-1],IP,80);
-                      IP :=0;
+                      IP := 0;
                     END;
-                  ELSE IF XPOST.LINJE[XPOST.LINTAL[IP] = CHR(19) THEN
-                    DELETE(XPOST.LINJE[XPOST.LINTAL],IP,80);
+              {    ELSE IF XPOST.LINJE[XPOST.LINTAL[IP] = CHR(19) THEN
+                    DELETE(XPOST.LINJE[XPOST.LINTAL],IP,80);  }
                   UNTIL IP >= LENGTH(XPOST.LINJE[XPOST.LINTAL]);
                   END;
           POST := XPOST;
           END;
 
-  { you can add units after this };
-   VAR
-     file1: file of LINJETYPE;
-     file2: text;
+  { you can add units after this }
+
+     var file1: file of LINJETYPE;
+     var linje: LINJETYPE;
+     var test : integer;
+
 begin
+
+     assign(file1,'/home/oyvind/repos/oyvind/felted/OPE7.DTA');
      reset(file1);
-     readIn(file1);
 
-end.
+     seek(file1, 0);
+     PAKKUTPOST();
+     writeLn(post.linje[0]);
 
+     close(file1);
+
+     end.
