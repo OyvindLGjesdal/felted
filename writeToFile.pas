@@ -80,23 +80,24 @@ begin
      writeln('size' + intToStr(size));
      with TStringList.Create do
        BEGIN
-     SetCodePage(RawByteString(l1),1252, false);
   with TStringList.Create do
+       BEGIN
        FOR IT2 := 0 TO size DO
        BEGIN
          seek(file1,IT2);
          read(file1,linje);
-         l1 :=  inttostr(IT2) + '||||' + inttostr(linje.LINSTATUS) + '||||'+ inttostr(linje.LINNESTE)   + '||||'  +'||||' + linje.LININNHALD ;
+         l1 :=  '<linje nr="'+inttostr(IT2) + '" status="' + inttostr(linje.LINSTATUS) + '" neste="'+ inttostr(linje.LINNESTE)   + '">'  +'' + linje.LININNHALD + '</linje>' ;
          writeln(l1);
          Add (l1)  ;
          end;
        SaveToFile('out.txt');
+       END;
+
 
        free;
 
+       END;
 
-
-     END ;
 
 
    {+ linje.LINSTATUS + C_FIELDSEP  + C_FIELDSEP;}
@@ -125,4 +126,4 @@ end;}
     { close(file1);
      close(outputfile);   }
 
-     end.
+      end.

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="">
+    <replaceregexp encoding="CP850" match="\u0000" flags="g" byline="true" replace="&lt;u0000/&gt;">
+        <fileset dir="." id="txt">
+            <include name="*.txt"/>
+        </fileset>
+    </replaceregexp>
+    <replaceregexp encoding="CP850" match="\u0007" flags="g" byline="true" replace="&lt;u0007/&gt;">
+        <fileset refid="txt"/>
+    </replaceregexp>
+    
+    <replaceregexp encoding="CP850" match="\u0012" flags="g" byline="true" replace="&lt;u0012/&gt;">
+        <fileset refid="txt"/>
+    </replaceregexp>
+    <replaceregexp encoding="CP850" match="\u0013" flags="g" byline="true" replace="&lt;u0013/&gt;">
+        <fileset refid="txt"/>
+    </replaceregexp>
+</project>
