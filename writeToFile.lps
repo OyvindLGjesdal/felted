@@ -8,13 +8,29 @@
         <Filename Value="writeToFile.pas"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="34"/>
-        <CursorPos X="49" Y="42"/>
-        <FoldState Value=" TCIH3-"/>
-        <UsageCount Value="20"/>
+        <TopLine Value="56"/>
+        <CursorPos X="21" Y="83"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit0>
     </Units>
-    <JumpHistory HistoryIndex="-1"/>
+    <JumpHistory Count="4" HistoryIndex="3">
+      <Position1>
+        <Filename Value="writeToFile.pas"/>
+        <Caret Line="74" Column="16" TopLine="47"/>
+      </Position1>
+      <Position2>
+        <Filename Value="writeToFile.pas"/>
+        <Caret Line="53" Column="27" TopLine="36"/>
+      </Position2>
+      <Position3>
+        <Filename Value="writeToFile.pas"/>
+        <Caret Line="18" Column="31" TopLine="60"/>
+      </Position3>
+      <Position4>
+        <Filename Value="writeToFile.pas"/>
+        <Caret Line="69" Column="35" TopLine="49"/>
+      </Position4>
+    </JumpHistory>
   </ProjectSession>
 </CONFIG>

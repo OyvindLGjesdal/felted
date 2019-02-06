@@ -1,17 +1,19 @@
 program writeToFile (file2);
 
-{$mode objfpc}{$H+}
-
+{$mode tp}{$H+}
 uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
-  cthreads,
+  cthreads,LConvEncdoding;
   {$ENDIF}{$ENDIF}
-  Sysutils;
+  Classes,Sysutils;
 
-  const C_FNAME = '/home/oyvind/repos/oyvind/felted/OPE7.DTA';
+
+  const C_FNAME = 'OPE2.DTA';
+  const C_FIELDSEP = '|||||';
+
 
   TYPE
-      LINJETYPE = RECORD
+      LINJETYPE = packed RECORD
                 LINSTATUS  : INTEGER ;
                 LININNHALD : STRING[80];
                 LINNESTE: INTEGER;
@@ -19,7 +21,7 @@ uses
   TYPE
       POSTTYPE = RECORD
                       LINTAL : INTEGER;
-                      LINJE : ARRAY [1 .. 52] OF STRING[80];
+                      LINJE : ARRAY [1 .. 52] OF STRING[100];
                   END;
 
         VAR
@@ -51,29 +53,76 @@ uses
                       XPOST.LINJE[XPOST.LINTAL] := COPY(POST.LINJE[IT],PP+1,80);
                       DELETE(XPOST.LINJE[XPOST.LINTAL-1],IP,80);
                       IP := 0;
-                    END;
-              {    ELSE IF XPOST.LINJE[XPOST.LINTAL[IP] = CHR(19) THEN
-                    DELETE(XPOST.LINJE[XPOST.LINTAL],IP,80);  }
+                    END
+                  ELSE IF XPOST.LINJE[XPOST.LINTAL][IP] = CHR(19) THEN
+                    DELETE(XPOST.LINJE[XPOST.LINTAL],IP,80);
                   UNTIL IP >= LENGTH(XPOST.LINJE[XPOST.LINTAL]);
                   END;
           POST := XPOST;
           END;
 
-  { you can add units after this }
 
+
+  { you can add units after this }
+     var outputfile : Text;
      var file1: file of LINJETYPE;
      var linje: LINJETYPE;
-     var test : integer;
+     var size : integer;
+     var linjetekst : String;
+     var l1 : String;
+     var IT2 : INTEGER;
 
 begin
-
-     assign(file1,'/home/oyvind/repos/oyvind/felted/OPE7.DTA');
+     assign(file1,C_FNAME);
+     assign(outputfile,'out.txt');
      reset(file1);
+     size := FileSize(file1) - 1 ;
+     writeln('size' + intToStr(size));
+     with TStringList.Create do
+       BEGIN
+     SetCodePage(RawByteString(l1),1252, false);
+  with TStringList.Create do
+       FOR IT2 := 0 TO size DO
+       BEGIN
+         seek(file1,IT2);
+         read(file1,linje);
+         l1 :=  inttostr(IT2) + '||||' + inttostr(linje.LINSTATUS) + '||||'+ inttostr(linje.LINNESTE)   + '||||'  +'||||' + linje.LININNHALD ;
+         writeln(l1);
+         Add (l1)  ;
+         end;
+       SaveToFile('out.txt');
 
-     seek(file1, 0);
+       free;
+
+
+
+     END ;
+
+
+   {+ linje.LINSTATUS + C_FIELDSEP  + C_FIELDSEP;}
+
+ { with TStringList.Create do
+    try
+      Add(l1);
+      Add(IntToStr(linje.LINSTATUS));
+      Add(IntToStr(linje.LINNESTE))  ;
+      SaveToFile('out.txt');
+
+    finally
+      Free;
+    end;
+end;}
+   {  {$I+}
+
+    // use LineEnding constant
+ { end else begin
+    end;                  }
+
      PAKKUTPOST();
-     writeLn(post.linje[0]);
+   {  writeLn(post.lintal);  }
 
-     close(file1);
+   {  writeLn(post.lintal); }
+    { close(file1);
+     close(outputfile);   }
 
      end.
