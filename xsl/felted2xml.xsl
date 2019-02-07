@@ -25,8 +25,8 @@
     <xsl:template match="linje[@neste='0']">
         <record>
             <xsl:variable name="current">
-            <xsl:apply-templates select="key('neste',@nr)" mode="neste"/>            
-            <xsl:apply-templates mode="neste"/>           
+            <xsl:apply-templates select="key('neste',@nr)" mode="expand-lines"/>            
+            <xsl:apply-templates mode="expand-lines"/>           
             </xsl:variable>
             <xsl:variable name="with-milestones">
             <xsl:apply-templates select="$current" mode="add-milestones"/>
@@ -42,7 +42,10 @@
             <xsl:apply-templates mode="neste"/>
     </xsl:template>
     
-    <xsl:template match="u0012|u0013" mode="neste"/>
+    <xsl:template match="u0012|u0013" mode="neste">
+        <xsl:variable name="following-text" select="following-sibling::node()[1]/self::text()"/>
+        <xsl:if test="matches($following-text,'^[A-Z]{2,}following-sibling::node()/self::text()"
+    </xsl:template>
     
     <xsl:template match="text()[matches(.,$field-name-regex)]" mode="add-milestones">
         <xsl:analyze-string select="." regex="{$field-name-regex}">
