@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." name="">
     <replaceregexp encoding="CP850" match="\u0000" flags="g" byline="true" replace="&lt;u0000/&gt;">
-        <fileset dir="." id="txt">
+        <fileset dir="input" id="txt">
             <include name="*.txt"/>
         </fileset>
     </replaceregexp>
+    <replaceregexp encoding="CP850" match="\u0001" flags="g" byline="true" replace="&lt;u0001/&gt;">
+        <fileset refid="txt"/>
+    </replaceregexp>
+    
+    <replaceregexp encoding="CP850" match="\u0002" flags="g" byline="true" replace="&lt;u0002/&gt;">
+        <fileset refid="txt"/>
+    </replaceregexp>
+    
     <replaceregexp encoding="CP850" match="\u0007" flags="g" byline="true" replace="&lt;u0007/&gt;">
+        <fileset refid="txt"/>
+    </replaceregexp>
+    <replaceregexp encoding="CP850" match="\u0006" flags="g" byline="true" replace="&lt;u0006/&gt;">
+        <fileset refid="txt"/>
+    </replaceregexp>
+    <replaceregexp encoding="CP850" match="\u0010" flags="g" byline="true" replace="&lt;u0010/&gt;">
+        <fileset refid="txt"/>
+    </replaceregexp>
+    <replaceregexp encoding="CP850" match="\u001C" flags="g" byline="true" replace="&lt;u001C/&gt;">
+        <fileset refid="txt"/>
+    </replaceregexp>
+    <replaceregexp encoding="CP850" match="\u001D" flags="g" byline="true" replace="&lt;u001D/&gt;">
+        <fileset refid="txt"/>
+    </replaceregexp>
+    
+    <replaceregexp encoding="CP850" match="\u001E" flags="g" byline="true" replace="&lt;u001E/&gt;">
+        <fileset refid="txt"/>
+    </replaceregexp>
+    <replaceregexp encoding="CP850" match="\u0015" flags="g" byline="true" replace="&lt;u0015/&gt;">
+        <fileset refid="txt"/>
+    </replaceregexp>
+    <replaceregexp encoding="CP850" match="\u0016" flags="g" byline="true" replace="&lt;u0016/&gt;">
         <fileset refid="txt"/>
     </replaceregexp>
     

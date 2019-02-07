@@ -1,5 +1,4 @@
-program writeToFile (file2);
-
+program writeToFile;
 {$mode tp}{$H+}
 uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
@@ -7,11 +6,9 @@ uses
   {$ENDIF}{$ENDIF}
   Classes,Sysutils;
 
-
-  const C_FNAME = 'OPE2.DTA';
   const C_FIELDSEP = '|||||';
 
-
+  var input_fname : string;
   TYPE
       LINJETYPE = packed RECORD
                 LINSTATUS  : INTEGER ;
@@ -68,13 +65,15 @@ uses
      var file1: file of LINJETYPE;
      var linje: LINJETYPE;
      var size : integer;
-     var linjetekst : String;
      var l1 : String;
      var IT2 : INTEGER;
+     var output_fname : String     ;
 
 begin
-     assign(file1,C_FNAME);
-     assign(outputfile,'out.txt');
+     input_fname :=ParamStr(1);
+     output_fname := copy(input_fname,1,length(input_fname) - 3) + 'txt';
+     assign(file1,input_fname);
+     assign(outputfile,output_fname);
      reset(file1);
      size := FileSize(file1) - 1 ;
      writeln('size' + intToStr(size));
@@ -90,40 +89,8 @@ begin
          writeln(l1);
          Add (l1)  ;
          end;
-       SaveToFile('out.txt');
+       SaveToFile(output_fname);
        END;
-
-
        free;
-
        END;
-
-
-
-   {+ linje.LINSTATUS + C_FIELDSEP  + C_FIELDSEP;}
-
- { with TStringList.Create do
-    try
-      Add(l1);
-      Add(IntToStr(linje.LINSTATUS));
-      Add(IntToStr(linje.LINNESTE))  ;
-      SaveToFile('out.txt');
-
-    finally
-      Free;
-    end;
-end;}
-   {  {$I+}
-
-    // use LineEnding constant
- { end else begin
-    end;                  }
-
-     PAKKUTPOST();
-   {  writeLn(post.lintal);  }
-
-   {  writeLn(post.lintal); }
-    { close(file1);
-     close(outputfile);   }
-
       end.

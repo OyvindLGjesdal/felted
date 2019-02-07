@@ -2,69 +2,84 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
-    exclude-result-prefixes="xs math"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    exclude-result-prefixes="xs math map"
     version="3.0">
     <xsl:key name="neste" match="linje" use="@neste"/>
     <xsl:output method="xml" indent="yes"/>
+    <xsl:param name="input-path" select="'/home/oyvind/repos/stedsnavn/felted/input/'"></xsl:param>
     
     <xsl:mode on-no-match="shallow-skip"/>    
-    <xsl:mode name="neste" on-no-match="shallow-copy" />
+    <xsl:mode name="expand-lines" on-no-match="shallow-copy"/>
     <xsl:mode name="add-milestones" on-no-match="shallow-copy"/>
     <xsl:mode name="expand-milestones" on-no-match="shallow-skip"/>
-    
-    <xsl:variable name="field-name-regex" select="'(OSFO|NORM|ARKI|LPNR|NATY|TRAD|KONR|GBNR|INFO|OPPS|LITT)'" as="xs:string"/>
-    
-    
+
     <xsl:template match="/">
-        <records>
-            <xsl:apply-templates/>
-        </records>
+        
+            <xsl:for-each select="for $x  in collection('/home/oyvind/repos/stedsnavn/felted/input/?select=*.txt;metadata=yes') return map:get($x,'canonical-path')">
+                <xsl:variable name="filename" select="substring-before(tokenize(.,'/')[last()],'.') || '.xml' "/>
+                <xsl:variable name="document-as-string" as="xs:string">
+                    <xsl:message select="$filename"/>
+                    <xsl:sequence select="'&lt;records&gt;' 
+                        ||  unparsed-text(.,'CP850')
+                        || '&lt;/records&gt;' "/>             
+                </xsl:variable>
+                
+               
+               <xsl:result-document href="{$filename}" method="xml">
+              
+                   <records><xsl:apply-templates select="parse-xml($document-as-string)/*"></xsl:apply-templates>
+              
+                   </records>
+               </xsl:result-document>
+            </xsl:for-each>
+            
+        
     </xsl:template>
     
-    <!-- begynn poster på linjer som ikke har neste-->
-    <xsl:template match="linje[@neste='0']">
+    <!-- begynn poster på linjer som ikke har neste, ekspanderer linjer, legger til milestone-elementer og ekspanderer til en flat xml-struktur-->
+    <xsl:template match="linje[@neste = '0']">
         <record>
-            <xsl:variable name="current">
-            <xsl:apply-templates select="key('neste',@nr)" mode="expand-lines"/>            
-            <xsl:apply-templates mode="expand-lines"/>           
+            <xsl:variable name="lines-added">
+                <xsl:apply-templates select="key('neste', @nr)" mode="expand-lines"/>
+                <xsl:apply-templates mode="expand-lines"/>
             </xsl:variable>
-            <xsl:variable name="with-milestones">
-            <xsl:apply-templates select="$current" mode="add-milestones"/>
+            <xsl:variable name="milestones-added">
+                <xsl:apply-templates select="$lines-added" mode="add-milestones"/>
             </xsl:variable>
-            <xsl:apply-templates select="$with-milestones" mode="expand-milestones"></xsl:apply-templates>
-        </record>        
+
+            <xsl:apply-templates select="$milestones-added" mode="expand-milestones"/>
+        </record>
     </xsl:template>
     
-    <xsl:template mode="neste" match="linje[@status!='1']" priority="5"/>
+    <xsl:template mode="#all" match="linje[@status!='1']" priority="5"/>
     
-    <xsl:template match="linje" mode="neste">     
-        <xsl:apply-templates select="key('neste',@nr)" mode="neste"/>     
-            <xsl:apply-templates mode="neste"/>
+    <xsl:template match="linje" mode="expand-lines">     
+        <xsl:apply-templates select="key('neste',@nr)" mode="expand-lines"/>     
+            <xsl:apply-templates mode="expand-lines"/>
     </xsl:template>
     
-    <xsl:template match="u0012|u0013" mode="neste">
-        <xsl:variable name="following-text" select="following-sibling::node()[1]/self::text()"/>
-        <xsl:if test="matches($following-text,'^[A-Z]{2,}following-sibling::node()/self::text()"
+    <!-- legger til element milestone for første tekst-node (OFSO?) som ikke har control-character-->
+    <xsl:template match="text()[not(exists(preceding-sibling::node()))]" mode="add-milestones">
+        <xsl:element name="{substring-before(self::text(),' ')}"/>
+        <xsl:next-match/>
     </xsl:template>
     
-    <xsl:template match="text()[matches(.,$field-name-regex)]" mode="add-milestones">
-        <xsl:analyze-string select="." regex="{$field-name-regex}">
-            <xsl:matching-substring>
-                <xsl:element name="{regex-group(1)}"/>
-            </xsl:matching-substring>
-            <xsl:non-matching-substring>
-                <xsl:value-of select="."/>
-            </xsl:non-matching-substring>
-        </xsl:analyze-string>
-    </xsl:template>
-    
-    <xsl:template mode="neste" match="text()[following-sibling::*[1]/self::u0013]">
-        <id><xsl:value-of select="."/></id>
+    <xsl:template match="u0012|u0013" mode="add-milestones">
+        <xsl:variable name="following-text" select="following-sibling::node()[1]/self::text()"/>        
+        <xsl:choose>
+            <xsl:when test="matches($following-text,'^([A-Z]{2,})\s')">                
+                <xsl:element name="{substring-before($following-text,' ')}"/>
+            </xsl:when>
+            <xsl:when test="following-sibling::node()[2]/self::u0013">
+                <id/>
+            </xsl:when>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template match="*[not(child::node())]" mode="expand-milestones">
         <xsl:element name="{name()}">
-            <xsl:value-of select="normalize-space(following-sibling::node()[1]/self::text())"/>
+            <xsl:value-of select="normalize-space(replace(following-sibling::node()[1]/self::text(),'[A-Z]{2,}\s+',''))"/>
         </xsl:element>
     </xsl:template>
 </xsl:stylesheet>
