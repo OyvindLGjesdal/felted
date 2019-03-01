@@ -24,7 +24,7 @@
                         || '&lt;/records&gt;' "/>             
                 </xsl:variable>                
                
-               <xsl:result-document href="{$filename}" method="xml">              
+               <xsl:result-document href="../result/{$filename}" method="xml">              
                    <records>
                        <xsl:apply-templates select="parse-xml($document-as-string)/*"/>              
                    </records>

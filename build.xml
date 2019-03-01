@@ -5,9 +5,11 @@
     </fileset>
     
     <target name="felted2Txt">
-    <apply executable="./writeToFile" parallel="false">
+    <apply force="yes" executable="./writeToFile" parallel="false">
         <srcfile/>
-        <fileset refid="txt"/>
+        <fileset dir="input">
+            <include name="*.DTA"/>
+        </fileset>
     </apply>
     </target>
     
@@ -96,7 +98,7 @@
     </target>
     
     <target name="transformFeltedTxtToXml" depends="preprocessForXml">
-        <xslt style="xsl/felted2xml.xsl" in="dummy.xml" out="test.xml"/>
+        <xslt style="xsl/felted2xml.xsl" in="dummy.xml" force="yes" out="test.xml"/>
     </target>
     
 </project>
