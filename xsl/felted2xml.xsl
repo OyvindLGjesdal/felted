@@ -14,8 +14,7 @@
     <xsl:mode name="add-milestones" on-no-match="shallow-copy"/>
     <xsl:mode name="expand-milestones" on-no-match="shallow-skip"/>
 
-    <xsl:template match="/">
-        
+    <xsl:template match="/">        
             <xsl:for-each select="for $x  in collection('/home/oyvind/repos/stedsnavn/felted/input/?select=*.txt;metadata=yes') return map:get($x,'canonical-path')">
                 <xsl:variable name="filename" select="substring-before(tokenize(.,'/')[last()],'.') || '.xml' "/>
                 <xsl:variable name="document-as-string" as="xs:string">
@@ -23,18 +22,14 @@
                     <xsl:sequence select="'&lt;records&gt;' 
                         ||  unparsed-text(.,'CP850')
                         || '&lt;/records&gt;' "/>             
-                </xsl:variable>
-                
+                </xsl:variable>                
                
-               <xsl:result-document href="{$filename}" method="xml">
-              
-                   <records><xsl:apply-templates select="parse-xml($document-as-string)/*"></xsl:apply-templates>
-              
+               <xsl:result-document href="{$filename}" method="xml">              
+                   <records>
+                       <xsl:apply-templates select="parse-xml($document-as-string)/*"/>              
                    </records>
                </xsl:result-document>
             </xsl:for-each>
-            
-        
     </xsl:template>
     
     <!-- begynn poster på linjer som ikke har neste, ekspanderer linjer, legger til milestone-elementer og ekspanderer til en flat xml-struktur-->
@@ -47,7 +42,6 @@
             <xsl:variable name="milestones-added">
                 <xsl:apply-templates select="$lines-added" mode="add-milestones"/>
             </xsl:variable>
-
             <xsl:apply-templates select="$milestones-added" mode="expand-milestones"/>
         </record>
     </xsl:template>

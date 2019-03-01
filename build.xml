@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." name="">
+<project basedir="." name="felted2xml" default="transformFeltedTxtToXml">
+    <fileset dir="input" id="txt">
+        <include name="*.txt"/>
+    </fileset>
+    
+    <target name="felted2Txt">
+    <apply executable="./writeToFile" parallel="false">
+        <srcfile/>
+        <fileset refid="txt"/>
+    </apply>
+    </target>
+    
+    <target name="preprocessForXml" depends="felted2Txt">
     <replaceregexp encoding="CP850" match="\u0000" flags="g" byline="true" replace="&lt;u0000/&gt;">
-        <fileset dir="input" id="txt">
-            <include name="*.txt"/>
-        </fileset>
+       <fileset refid="txt"/>
     </replaceregexp>
     <replaceregexp encoding="CP850" match="\u0001" flags="g" byline="true" replace="&lt;u0001/&gt;">
         <fileset refid="txt"/>
@@ -22,27 +32,71 @@
     <replaceregexp encoding="CP850" match="\u0010" flags="g" byline="true" replace="&lt;u0010/&gt;">
         <fileset refid="txt"/>
     </replaceregexp>
+        
     <replaceregexp encoding="CP850" match="\u001C" flags="g" byline="true" replace="&lt;u001C/&gt;">
         <fileset refid="txt"/>
     </replaceregexp>
+        
     <replaceregexp encoding="CP850" match="\u001D" flags="g" byline="true" replace="&lt;u001D/&gt;">
         <fileset refid="txt"/>
     </replaceregexp>
-    
-    <replaceregexp encoding="CP850" match="\u001E" flags="g" byline="true" replace="&lt;u001E/&gt;">
+        
+        <replaceregexp encoding="CP850" match="\u001A" flags="g" byline="true" replace="&lt;u001A/&gt;">
+            <fileset refid="txt"/>
+        </replaceregexp>   
+        <replaceregexp encoding="CP850" match="\u0003" flags="g" byline="true" replace="&lt;u0003/&gt;">
+            <fileset refid="txt"/>
+        </replaceregexp>
+        <replaceregexp encoding="CP850" match="\u000B" flags="g" byline="true" replace="&lt;u000B/&gt;">
+            <fileset refid="txt"/>
+        </replaceregexp>        
+        
+        <replaceregexp encoding="CP850" match="\u0008" flags="g" byline="true" replace="&lt;u0008/&gt;">
+            <fileset refid="txt"/>
+        </replaceregexp>
+        
+        <replaceregexp encoding="CP850" match="\u001E" flags="g" byline="true" replace="&lt;u001E/&gt;">
         <fileset refid="txt"/>
     </replaceregexp>
+        
+        <replaceregexp encoding="CP850" match="\u0004" flags="g" byline="true" replace="&lt;u0004/&gt;">
+            <fileset refid="txt"/>
+        </replaceregexp>
+        
+        <replaceregexp encoding="CP850" match="\u0005" flags="g" byline="true" replace="&lt;u0005/&gt;">
+            <fileset refid="txt"/>
+        </replaceregexp>
+        
+        <replaceregexp encoding="CP850" match="\u0014" flags="g" byline="true" replace="&lt;u0014/&gt;">
+            <fileset refid="txt"/>
+        </replaceregexp>
+        <replaceregexp encoding="CP850" match="\u0011" flags="g" byline="true" replace="&lt;u0011/&gt;">
+            <fileset refid="txt"/>
+        </replaceregexp>
     <replaceregexp encoding="CP850" match="\u0015" flags="g" byline="true" replace="&lt;u0015/&gt;">
         <fileset refid="txt"/>
     </replaceregexp>
+        
+        <replaceregexp encoding="CP850" match="\u0019" flags="g" byline="true" replace="&lt;u0019/&gt;">
+            <fileset refid="txt"/>
+        </replaceregexp>
+        
+        <replaceregexp encoding="CP850" match="\u0018" flags="g" byline="true" replace="&lt;u0018/&gt;">
+            <fileset refid="txt"/>
+        </replaceregexp>    
     <replaceregexp encoding="CP850" match="\u0016" flags="g" byline="true" replace="&lt;u0016/&gt;">
         <fileset refid="txt"/>
-    </replaceregexp>
-    
+    </replaceregexp>    
     <replaceregexp encoding="CP850" match="\u0012" flags="g" byline="true" replace="&lt;u0012/&gt;">
         <fileset refid="txt"/>
     </replaceregexp>
     <replaceregexp encoding="CP850" match="\u0013" flags="g" byline="true" replace="&lt;u0013/&gt;">
         <fileset refid="txt"/>
     </replaceregexp>
+    </target>
+    
+    <target name="transformFeltedTxtToXml" depends="preprocessForXml">
+        <xslt style="xsl/felted2xml.xsl" in="dummy.xml" out="test.xml"/>
+    </target>
+    
 </project>
