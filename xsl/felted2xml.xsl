@@ -7,6 +7,7 @@
     version="3.0">
     <xsl:key name="neste" match="linje" use="@neste"/>
     <xsl:output method="xml" indent="yes"/>
+    <xsl:param name="debug" as="xs:boolean" select="false()"/>
     <xsl:mode on-no-match="shallow-skip"/>    
     <xsl:mode name="expand-lines" on-no-match="shallow-copy"/>
     <xsl:mode name="add-milestones" on-no-match="shallow-copy"/>
