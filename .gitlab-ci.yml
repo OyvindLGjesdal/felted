@@ -1,0 +1,9 @@
+build:
+  image: oyvindg/gitlab-ci-library:xmldev
+  before_script:
+  - yum install fpc
+  script:
+  - fpc -Miso writeToFile.pas
+
+ #test_script:
+  
