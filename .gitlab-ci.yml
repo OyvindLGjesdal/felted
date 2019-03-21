@@ -14,3 +14,4 @@ test_script:
   stage: test
   script:
   - ant -lib $SAXON_HOME/Saxon9HE.jar
+  - ls -ahl result
