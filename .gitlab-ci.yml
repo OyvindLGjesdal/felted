@@ -1,9 +1,15 @@
 build:
+  stage: build
   image: fedora:29
   before_script:
   - dnf install fpc -y
   script:
   - fpc -Miso writeToFile.pas
 
- #test_script:
-  
+ 
+test_script:
+  image: oyvindg/gitlab-ci-library:xmldev
+  dependencies: build
+  stage: test
+  script:
+  - ./writeToFile
