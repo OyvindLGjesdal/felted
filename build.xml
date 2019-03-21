@@ -5,7 +5,7 @@
     </fileset>
     
     <target name="felted2Txt">
-    <apply force="yes" executable="./writeToFile" parallel="false">
+    <apply force="yes" executable="binaries/writeToFile" parallel="false">
         <srcfile/>
         <fileset dir="input">
             <include name="*.DTA"/>
