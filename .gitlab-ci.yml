@@ -13,4 +13,4 @@ test_script:
   - build
   stage: test
   script:
-  - ./writeToFile
+  - ant -lib $SAXON_HOME/Saxon9HE.jar
