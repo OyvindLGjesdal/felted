@@ -14,7 +14,7 @@
     <xsl:mode name="expand-milestones" on-no-match="shallow-skip"/>
 
     <xsl:template match="/">        
-            <xsl:for-each select="for $x  in collection('input/?select=*.txt;metadata=yes') return map:get($x,'canonical-path')">
+	 <xsl:for-each select="for $x  in collection('../input/?select=*.txt;metadata=yes') return map:get($x,'canonical-path')">
                 <xsl:variable name="filename" select="substring-before(tokenize(.,'/')[last()],'.') || '.xml' "/>
                 <xsl:variable name="document-as-string" as="xs:string">
 				    <xsl:if test="$debug">
