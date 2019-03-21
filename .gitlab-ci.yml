@@ -4,9 +4,12 @@ build:
   before_script:
   - dnf install fpc -y
   script:
+  - mkdir binaries
   - fpc -Miso writeToFile.pas
-  artifact:
-  - writeToFile
+  - mv writeToFile binaries/
+  artifacts:
+    paths: 
+    - binaries
  
 test_script:
   image: oyvindg/gitlab-ci-library:xmldev
