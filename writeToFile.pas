@@ -76,7 +76,7 @@ begin
      assign(outputfile,output_fname);
      reset(file1);
      size := FileSize(file1) - 1 ;
-     writeln('size' + intToStr(size));
+     {     writeln('size' + intToStr(size)); }
      with TStringList.Create do
        BEGIN
   with TStringList.Create do
@@ -86,7 +86,7 @@ begin
          seek(file1,IT2);
          read(file1,linje);
          l1 :=  '<linje nr="'+inttostr(IT2) + '" status="' + inttostr(linje.LINSTATUS) + '" neste="'+ inttostr(linje.LINNESTE)   + '">'  +'' + linje.LININNHALD + '</linje>' ;
-         writeln(l1);
+	 { writeln(l1); }
          Add (l1)  ;
          end;
        SaveToFile(output_fname);
