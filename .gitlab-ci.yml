@@ -1,7 +1,7 @@
 build:
   image: oyvindg/gitlab-ci-library:xmldev
   before_script:
-  - yum install epel -y
+  - yum install epel-release -y
   - yum install fpc -y
   script:
   - fpc -Miso writeToFile.pas
