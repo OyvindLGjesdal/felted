@@ -7,18 +7,18 @@
     version="3.0">
     <xsl:key name="neste" match="linje" use="@neste"/>
     <xsl:output method="xml" indent="yes"/>
-    <xsl:param name="input-path" select="'/home/oyvind/repos/stedsnavn/felted/input/'"></xsl:param>
-    
     <xsl:mode on-no-match="shallow-skip"/>    
     <xsl:mode name="expand-lines" on-no-match="shallow-copy"/>
     <xsl:mode name="add-milestones" on-no-match="shallow-copy"/>
     <xsl:mode name="expand-milestones" on-no-match="shallow-skip"/>
 
     <xsl:template match="/">        
-            <xsl:for-each select="for $x  in collection('/home/oyvind/repos/stedsnavn/felted/input/?select=*.txt;metadata=yes') return map:get($x,'canonical-path')">
+            <xsl:for-each select="for $x  in collection('input/?select=*.txt;metadata=yes') return map:get($x,'canonical-path')">
                 <xsl:variable name="filename" select="substring-before(tokenize(.,'/')[last()],'.') || '.xml' "/>
                 <xsl:variable name="document-as-string" as="xs:string">
-                    <xsl:message select="$filename"/>
+				    <xsl:if test="$debug">
+					    <xsl:message select="$filename"/>
+			            </xsl:if>
                     <xsl:sequence select="'&lt;records&gt;' 
                         ||  unparsed-text(.,'CP850')
                         || '&lt;/records&gt;' "/>             
