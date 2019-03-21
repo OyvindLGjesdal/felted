@@ -9,7 +9,8 @@ build:
  
 test_script:
   image: oyvindg/gitlab-ci-library:xmldev
-  dependencies: build
+  dependencies: 
+  - build
   stage: test
   script:
   - ./writeToFile
